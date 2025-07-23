@@ -47,8 +47,12 @@ app_products_total ${productCount}
 # TYPE app_comments_total gauge
 app_comments_total ${commentCount}
     `.trim());
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error('Metrics error:', err);
-    res.status(500).send(`# Error: ${err.message}`);
+    if (err instanceof Error) {
+      res.status(500).send(`# Error: ${err.message}`);
+    } else {
+      res.status(500).send(`# Error: Unknown error`);
+    }
   }
 }
