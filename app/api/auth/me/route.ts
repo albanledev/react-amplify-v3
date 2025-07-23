@@ -40,7 +40,7 @@ export async function PUT(req: NextRequest) {
   const userId = getDataFromToken(token);
 
   const body = (await req.json()) as UserType;
-  if (!UserZod.parse(body))
+  if (!UserZod.safeParse(body).success)
     return NextResponse.json({ message: `Wrong data` }, { status: 500 });
 
   const query = supabase.from("users");

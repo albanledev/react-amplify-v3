@@ -35,7 +35,7 @@ export async function PUT(
   const { id } = await params;
 
   const body = (await req.json()) as ProductType;
-  if (!ProductZod.parse(body))
+  if (!ProductZod.safeParse(body).success)
     return NextResponse.json({ message: `Wrong data` }, { status: 500 });
 
   const query = supabase.from("products");
