@@ -24,7 +24,11 @@ const loginFn = async ({
     });
     const res = await response.json();
 
-    return res.status === 200 ? res : null;
+    if (res.status === 200) {
+      return res;
+    } else {
+      throw new Error("Invalid login response");
+    }
   } catch (e) {
     console.warn({ e });
     throw new Error("Error while login");
