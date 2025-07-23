@@ -1,12 +1,18 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY!
-);
-
 export async function GET() {
+  // 👇 Initialize Supabase client *inside* the handler
+  const supabaseUrl = process.env.SUPABASE_URL;
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !supabaseServiceRoleKey) {
+    console.error('Missing Supabase environment variables');
+    return new NextResponse('# Error: Missing Supabase environment variables', { status: 500 });
+  }
+
+  const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
   try {
     const { count: userCount, error: userError } = await supabase
       .from('users')
@@ -37,11 +43,10 @@ app_products_total ${productCount}
 app_comments_total ${commentCount}
 `.trim();
 
-    const response = new NextResponse(metrics, {
+    return new NextResponse(metrics, {
       status: 200,
       headers: { 'Content-Type': 'text/plain; version=0.0.4' },
     });
-    return response;
 
   } catch (err: unknown) {
     console.error('Metrics error:', err);
