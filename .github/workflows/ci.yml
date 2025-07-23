@@ -7,43 +7,23 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  run-build:
     runs-on: ubuntu-latest
-    env:
-      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-      NEXT_PUBLIC_SUPABASE_ROLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}
-
+    needs: run-lint
     steps:
-      # 📥 1. Checkout le code
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # 🟢 2. Setup Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      # 📦 3. Installer les dépendances
+          node-version: '22.x'
       - name: Install dependencies
-        run: npm ci
-
-      # 🧹 4. Lint le code
-      - name: Run ESLint
-        run: npm run lint
-
-      # 📝 5. Vérifier les types TypeScript
-      - name: Type check
-        run: npx tsc --noEmit
-
-      # 🔨 6. Build l'app Next.js
-      - name: Build Next.js app
+        run: npm install
+      - name: Display environment variables
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ROLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}
+        run: |
+          echo "NEXT_PUBLIC_SUPABASE_URL=${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}"
+          echo "NEXT_PUBLIC_SUPABASE_ROLE_KEY=${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}"
+      - name: Try to build
         run: npm run build
-
-      # 📦 7. Sauvegarder le build en artefacts (optionnel)
-      - name: Upload production-ready build
-        uses: actions/upload-artifact@v4
-        with:
-          name: nextjs-build
-          path: .next
