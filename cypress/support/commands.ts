@@ -44,7 +44,7 @@ Cypress.Commands.add(
   ) => {
     cy.request({
       method: "POST",
-      url: "http://localhost:3000/api/auth/login",
+      url: `${Cypress.env("url")}api/auth/login`,
       body: { email, password },
       headers: {
         "Content-Type": "application/json",
