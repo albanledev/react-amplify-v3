@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+      NEXT_PUBLIC_SUPABASE_ROLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}
 
     steps:
       # 📥 1. Checkout le code
@@ -36,9 +39,6 @@ jobs:
 
       # 🔨 6. Build l'app Next.js
       - name: Build Next.js app
-        env:
-          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
-          NEXT_PUBLIC_SUPABASE_ROLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}
         run: npm run build
 
       # 📦 7. Sauvegarder le build en artefacts (optionnel)
