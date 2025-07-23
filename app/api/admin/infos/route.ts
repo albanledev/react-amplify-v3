@@ -8,9 +8,13 @@ export async function GET() {
 
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("email");
+    .select("title");
 
-  if (usersError || productsError) {
+  const { data: comments, error: commentsError } = await supabase
+    .from("comments")
+    .select("content");
+
+  if (usersError ?? productsError ?? commentsError) {
     return NextResponse.json({ message: "Error" }, { status: 500 });
   }
 
@@ -20,6 +24,7 @@ export async function GET() {
       data: {
         numberUsers: users?.length,
         numberProducts: products?.length,
+        numberComments: comments?.length,
       },
     },
     { status: 200 }

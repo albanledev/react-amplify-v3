@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "cy:open": "cypress open",
+    "cy:run": "cypress run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",
     "dayjs": "^1.11.13",
+    "jose": "^6.0.12",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "next": "15.4.3",
@@ -27,6 +30,8 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "cypress": "^14.5.2",
+    "dotenv": "^17.2.0",
     "eslint": "^9",
     "eslint-config-next": "15.4.3",
     "tailwindcss": "^4",
