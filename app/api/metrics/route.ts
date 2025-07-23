@@ -2,16 +2,21 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 export async function GET() {
-  // 👇 Initialize Supabase client *inside* the handler
-  const supabaseUrl = process.env.SUPABASE_URL;
-  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  // 🪜 Try to get private env vars first, fallback to public ones
+  const supabaseUrl =
+    process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey =
+    process.env.SUPABASE_SERVICE_ROLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY;
 
-  if (!supabaseUrl || !supabaseServiceRoleKey) {
+  if (!supabaseUrl || !supabaseKey) {
     console.error('Missing Supabase environment variables');
-    return new NextResponse('# Error: Missing Supabase environment variables', { status: 500 });
+    return new NextResponse('# Error: Missing Supabase environment variables', {
+      status: 500,
+    });
   }
 
-  const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+  const supabase = createClient(supabaseUrl, supabaseKey);
 
   try {
     const { count: userCount, error: userError } = await supabase
@@ -47,9 +52,11 @@ app_comments_total ${commentCount}
       status: 200,
       headers: { 'Content-Type': 'text/plain; version=0.0.4' },
     });
-
   } catch (err: unknown) {
     console.error('Metrics error:', err);
-    return new NextResponse(`# Error: ${err instanceof Error ? err.message : 'Unknown error'}`, { status: 500 });
+    return new NextResponse(
+      `# Error: ${err instanceof Error ? err.message : 'Unknown error'}`,
+      { status: 500 }
+    );
   }
 }
