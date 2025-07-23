@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 interface FormData {
   email: string;
@@ -82,7 +83,7 @@ export default function SignInPage() {
 
       // Login successful, redirect to dashboard
       router.push("/");
-    } catch (error) {
+    } catch {
       setErrors({ general: "An error occurred. Please try again." });
     } finally {
       setIsLoading(false);
@@ -147,10 +148,11 @@ export default function SignInPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                <img
+                <Image
                   src="https://api.builder.io/api/v1/image/assets/3a0e3d30791d4b86be23a4bad372575c/2b52020d01d848877e679c1d17d0cc64187109fa?placeholderIfAbsent=true"
                   alt="Toggle password visibility"
-                  className="w-5 h-5"
+                  width={20}
+                  height={20}
                 />
               </button>
             </div>
@@ -187,7 +189,7 @@ export default function SignInPage() {
 
         <div className="text-center mt-8">
           <div className="text-sm">
-            <span className="text-gray-500">Don't have an account? </span>
+            <span className="text-gray-500">Don&apos;t have an account? </span>
             <Link href="/signUp" className="text-indigo-600 font-semibold hover:text-indigo-700">
               Create Account
             </Link>
