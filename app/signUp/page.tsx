@@ -112,7 +112,7 @@ export default function SignUpPage() {
     }
   };
 
-  const roleOptions = ["Normal User", "Admin", "Moderator"];
+  const roleOptions = ["Normal User", "Admin"];
 
   return (
     <div className="bg-slate-50 min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-20 py-4 font-sans">
@@ -285,7 +285,7 @@ export default function SignUpPage() {
         <div className="text-center mt-8">
           <div className="text-sm">
             <span className="text-gray-500">Already have an account? </span>
-            <Link href="/" className="text-indigo-600 font-semibold hover:text-indigo-700">
+            <Link href="/signIn" className="text-indigo-600 font-semibold hover:text-indigo-700">
               Sign in
             </Link>
           </div>
