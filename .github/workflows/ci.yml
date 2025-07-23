@@ -2,13 +2,51 @@ name: CI
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    needs: run-prettier
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "22.x"
+      - name: Install dependencies
+        run: npm install
+      - name: Verify lint
+        run: npm run lint
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: lint
+    env:
+      CYPRESS_TEST_EMAIL: ${{ secrets.CYPRESS_TEST_EMAIL }}
+      CYPRESS_TEST_PASSWORD: ${{ secrets.CYPRESS_TEST_PASSWORD }}
+      NEXT_PUBLIC_URL: ${{ secrets.NEXT_PUBLIC_URL }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: "22.x"
+      - name: Install dependencies
+        run: npm install
+      - name: Display environment variables
+        run: |
+          echo "CYPRESS_TEST_EMAIL=$CYPRESS_TEST_EMAIL"
+          echo "CYPRESS_TEST_PASSWORD=$CYPRESS_TEST_PASSWORD"
+          echo "NEXT_PUBLIC_URL=$NEXT_PUBLIC_URL"
+      - name: Pass tests
+        run: npm run cy:run
+
   build:
     runs-on: ubuntu-latest
+    needs: test
     env:
       NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ROLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ROLE_KEY }}
@@ -17,7 +55,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '22.x'
+          node-version: "22.x"
       - name: Install dependencies
         run: npm install
       - name: Display environment variables
