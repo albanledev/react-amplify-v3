@@ -9,12 +9,20 @@ const LoginZod = z.object({
 export type Login = z.infer<typeof LoginZod>;
 
 export async function POST(req: Request) {
-  const body = (await req.json()) as Login;
-  if (!LoginZod.parse(body)) {
+  if (
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ROLE_KEY
+  ) {
     return NextResponse.json(
-      {
-        message: `Error while signing in user`,
-      },
+      { message: "Supabase env variables missing" },
+      { status: 500 }
+    );
+  }
+
+  const body = (await req.json()) as Login;
+  if (!LoginZod.safeParse(body).success) {
+    return NextResponse.json(
+      { message: `Error while signing in user` },
       { status: 500 }
     );
   }
