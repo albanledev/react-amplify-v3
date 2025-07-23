@@ -36,13 +36,14 @@ export async function POST(req: Request) {
     );
   }
 
-  const { session } = data;
+  const { session, user } = data;
   const { expires_in, expires_at, refresh_token, token_type, access_token } =
     session;
 
   return NextResponse.json(
     {
       message: `Connected`,
+      user: user,
       session: {
         access_token,
         refresh_token,

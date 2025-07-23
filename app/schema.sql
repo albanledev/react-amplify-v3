@@ -5,9 +5,8 @@ CREATE TYPE user_role AS ENUM ('OWNER', 'USER');
 
 -- User Table --
 CREATE TABLE users (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id uuid references auth.users on delete cascade not null primary key,
     email TEXT UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
     name TEXT,
     role user_role NOT NULL DEFAULT 'USER',
     created_at TIMESTAMPTZ DEFAULT now(),
