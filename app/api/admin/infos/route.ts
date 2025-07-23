@@ -1,7 +1,7 @@
 import supabase from "@/app/supabase";
 import { NextResponse } from "next/server";
 
-export async function GET(req: Request) {
+export async function GET() {
   const { data: users, error: usersError } = await supabase
     .from("users")
     .select("email");

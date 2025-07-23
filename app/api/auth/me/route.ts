@@ -43,7 +43,7 @@ export async function PUT(req: NextRequest) {
   if (!UserZod.parse(body))
     return NextResponse.json({ message: `Wrong data` }, { status: 500 });
 
-  let query = supabase.from("users");
+  const query = supabase.from("users");
 
   const { error } = await query
     .update({

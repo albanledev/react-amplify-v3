@@ -38,7 +38,7 @@ export async function PUT(
   if (!ProductZod.parse(body))
     return NextResponse.json({ message: `Wrong data` }, { status: 500 });
 
-  let query = supabase.from("products");
+  const query = supabase.from("products");
 
   const { error } = await query
     .update({
