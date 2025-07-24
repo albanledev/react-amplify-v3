@@ -27,3 +27,53 @@ export async function POST(req: Request) {
     { status: 201 }
   );
 }
+
+/**
+ * @swagger
+ * /api/commecnts:
+ *   post:
+ *     summary: Create comment
+ *     description: Create comment
+ *     tags:
+ *       - Comment
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               content:
+ *                 type: string
+ *                 example: "New comment"
+ *               product_id:
+ *                 type: string
+ *                 example: "23245235645745667567456754"
+ *             required:
+ *               - email
+ *               - password
+ *     responses:
+ *       201:
+ *         description: Login
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *       500:
+ *         description: Données invalides
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Error while signing in user"
+ *                 error:
+ *                   type: string
+ *                   example: ""
+ *       401:
+ *         description: Non autorisé (token manquant ou invalide)
+ */
