@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "next build && touch .next/cache/.previewinfo",
+    "postbuild": "mkdir -p .next/cache && echo '{}' > .next/cache/.previewinfo",
     "start": "next start",
     "lint": "next lint",
     "cy:open": "cypress open",
