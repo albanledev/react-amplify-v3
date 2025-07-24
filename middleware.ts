@@ -5,8 +5,10 @@ import isUserAdmin from "./app/utils/isUserAdmin.ts";
 
 const pathnamesNoToken = [
   "/api/auth/login",
-  "/api/auth/resgister",
+  "/api/auth/register",
   "/api/products",
+  "/api/metrics",
+
 ];
 
 export const middleware = async (request: NextRequest) => {
