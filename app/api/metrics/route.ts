@@ -22,6 +22,9 @@ export async function GET(req: Request) {
   const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
   try {
+    // Date ISO il y a une heure
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
     const [{ count: userCount }, { count: productCount }, { count: commentCount }, { count: activeUsersCount }] =
       await Promise.all([
         supabase.from('users').select('*', { count: 'exact', head: true }),
@@ -29,11 +32,8 @@ export async function GET(req: Request) {
         supabase.from('comments').select('*', { count: 'exact', head: true }),
         supabase
           .from('users')
-          .select('*', {
-            count: 'exact',
-            head: true,
-          })
-          .gt('last_sign_in_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()),
+          .select('*', { count: 'exact', head: true })
+          .or(`last_sign_in_at.gte.${oneHourAgo},created_at.gte.${oneHourAgo}`),
       ]);
 
     const metrics = `
