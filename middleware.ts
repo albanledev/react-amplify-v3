@@ -20,15 +20,15 @@ export const middleware = async (request: NextRequest) => {
     : request.cookies.get("token")?.value ?? null;
 
   if (request.nextUrl.pathname.includes("admin")) {
-    return (await isUserAdmin(token))
-      ? response
-      : NextResponse.json(
-          {
-            message: `You're not allowed, insert your token in Authorization headers ADMIN`,
-          },
-          { status: 403 }
-        )
-  }
+  return (await isUserAdmin(token))
+    ? response
+    : NextResponse.json(
+        {
+          message: `You're not allowed, insert your token in Authorization headers ADMIN`,
+        },
+        { status: 403 }
+      );
+}
 
   if (pathnamesNoToken.includes(request.nextUrl.pathname)) return response;
 

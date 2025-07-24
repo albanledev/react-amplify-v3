@@ -1,10 +1,13 @@
 # 📊 Next.js Analytics Dashboard
 
 Un projet Next.js moderne déployé sur Vercel, utilisant Supabase (PostgreSQL) comme base de données cloud, et Grafana Cloud + Prometheus pour la collecte et la visualisation des métriques.
+C'est une application Web complète permettant la gestion de produits, avec différents rôles
+utilisateurs, plusieurs environnements de test, un suivi métrique, et une stratégie de déploiement
+cloud automatisée.
 
-🔧 Stack technique
+# 🔧 Stack technique
 
-# Next.js — framework React fullstack (frontend + API routes)
+Next.js — framework React fullstack (frontend + API routes)
 
 Supabase — base de données PostgreSQL + auth
 

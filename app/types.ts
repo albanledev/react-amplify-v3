@@ -14,6 +14,18 @@ export const ProductZod = z.object({
 
 export type ProductType = z.infer<typeof ProductZod>;
 
+export const Product = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().optional(),
+  image_url: z.string(),
+});
+
+export type Product = z.infer<typeof Product>;
+
+export const ProductsZod = z.array(Product);
+export type Products = z.infer<typeof ProductsZod>;
+
 export const CommentAddZod = z.object({
   content: z.string(),
   product_id: z.string(),

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
+import { useAuth } from "../AuthContext";
 
 interface FormData {
   email: string;
@@ -21,11 +22,13 @@ export default function SignInPage() {
     email: "",
     password: "",
   });
-  
+
+  const { login } = useAuth();
+
   const [errors, setErrors] = useState<FormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   const router = useRouter();
 
   const validateForm = (): boolean => {
@@ -46,15 +49,15 @@ export default function SignInPage() {
   };
 
   const handleInputChange = (field: keyof FormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
@@ -63,25 +66,16 @@ export default function SignInPage() {
     setErrors({});
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-      });
+      const { email, password } = formData;
+      const loged = await login(email, password);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setErrors({ general: data.message || "Login failed. Please try again." });
+      if (!loged) {
+        setErrors({
+          general: "Login failed. Please try again.",
+        });
         return;
       }
 
-      // Login successful, redirect to dashboard
       router.push("/");
     } catch {
       setErrors({ general: "An error occurred. Please try again." });
@@ -97,9 +91,7 @@ export default function SignInPage() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome Back
           </h1>
-          <p className="text-gray-500 mb-8">
-            Sign in to your account
-          </p>
+          <p className="text-gray-500 mb-8">Sign in to your account</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -110,7 +102,10 @@ export default function SignInPage() {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label
+              htmlFor="email"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
               Email Address
             </label>
             <input
@@ -129,7 +124,10 @@ export default function SignInPage() {
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
+            <label
+              htmlFor="password"
+              className="block text-sm font-semibold text-gray-700 mb-2"
+            >
               Password
             </label>
             <div className="relative">
@@ -169,11 +167,17 @@ export default function SignInPage() {
                 type="checkbox"
                 className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
               />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
+              <label
+                htmlFor="remember-me"
+                className="ml-2 block text-sm text-gray-700"
+              >
                 Remember me
               </label>
             </div>
-            <Link href="#" className="text-sm text-indigo-600 font-semibold hover:text-indigo-700">
+            <Link
+              href="#"
+              className="text-sm text-indigo-600 font-semibold hover:text-indigo-700"
+            >
               Forgot password?
             </Link>
           </div>
@@ -190,18 +194,27 @@ export default function SignInPage() {
         <div className="text-center mt-8">
           <div className="text-sm">
             <span className="text-gray-500">Don&apos;t have an account? </span>
-            <Link href="/signUp" className="text-indigo-600 font-semibold hover:text-indigo-700">
+            <Link
+              href="/signUp"
+              className="text-indigo-600 font-semibold hover:text-indigo-700"
+            >
               Create Account
             </Link>
           </div>
         </div>
 
         <div className="flex items-center justify-center space-x-4 mt-12 text-xs text-gray-400">
-          <Link href="#" className="hover:text-gray-600">Privacy Policy</Link>
+          <Link href="#" className="hover:text-gray-600">
+            Privacy Policy
+          </Link>
           <span>•</span>
-          <Link href="#" className="hover:text-gray-600">Terms of Service</Link>
+          <Link href="#" className="hover:text-gray-600">
+            Terms of Service
+          </Link>
           <span>•</span>
-          <Link href="#" className="hover:text-gray-600">Help</Link>
+          <Link href="#" className="hover:text-gray-600">
+            Help
+          </Link>
         </div>
       </div>
     </div>
