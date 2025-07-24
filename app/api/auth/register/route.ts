@@ -35,12 +35,12 @@ export async function POST(req: Request) {
     );
   }
   const { session, user: userSignIn } = response.data;
+
   return NextResponse.json(
     {
+      message: `Registered`,
       user: userSignIn,
-      token: session.access_token,
-      refresh_token: session.refresh_token,
-      errorCode: null,
+      session,
     },
     { status: 201 }
   );

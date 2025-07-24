@@ -10,7 +10,7 @@ export const LoginTypeResZod = z.object({
 
 export type LoginTypeRes = z.infer<typeof LoginTypeResZod>;
 
-const loginFn = async ({
+const resgisterFn = async ({
   email,
   password,
 }: {
@@ -18,21 +18,21 @@ const loginFn = async ({
   password: string;
 }): Promise<LoginTypeRes> => {
   try {
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("/api/auth/register", {
       method: "POST",
       body: JSON.stringify({ email, password }),
     });
     const res = await response.json();
 
-    if (response.status === 200) {
+    if (response.status === 201) {
       return res;
     } else {
-      throw new Error("Invalid login response");
+      throw new Error("Invalid resgister response");
     }
   } catch (e) {
     console.warn({ e });
-    throw new Error("Error while login");
+    throw new Error("Error while resgister");
   }
 };
 
-export default loginFn;
+export default resgisterFn;
