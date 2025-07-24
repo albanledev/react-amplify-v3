@@ -22,17 +22,19 @@ export async function GET(req: Request) {
   const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
 
   try {
-    const { count: userCount } = await supabase
-      .from('users')
-      .select('*', { count: 'exact', head: true });
-
-    const { count: productCount } = await supabase
-      .from('products')
-      .select('*', { count: 'exact', head: true });
-
-    const { count: commentCount } = await supabase
-      .from('comments')
-      .select('*', { count: 'exact', head: true });
+    const [{ count: userCount }, { count: productCount }, { count: commentCount }, { count: activeUsersCount }] =
+      await Promise.all([
+        supabase.from('users').select('*', { count: 'exact', head: true }),
+        supabase.from('products').select('*', { count: 'exact', head: true }),
+        supabase.from('comments').select('*', { count: 'exact', head: true }),
+        supabase
+          .from('users')
+          .select('*', {
+            count: 'exact',
+            head: true,
+          })
+          .gt('last_sign_in_at', new Date(Date.now() - 60 * 60 * 1000).toISOString()),
+      ]);
 
     const metrics = `
 # HELP app_users_total Total number of users
@@ -46,6 +48,10 @@ app_products_total ${productCount ?? 0}
 # HELP app_comments_total Total number of comments
 # TYPE app_comments_total gauge
 app_comments_total ${commentCount ?? 0}
+
+# HELP app_active_users_last_hour Number of users who signed in the past hour
+# TYPE app_active_users_last_hour gauge
+app_active_users_last_hour ${activeUsersCount ?? 0}
 `.trim();
 
     return new NextResponse(metrics, {

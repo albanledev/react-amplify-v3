@@ -14,7 +14,7 @@ const pathnamesNoToken = [
 export const middleware = async (request: NextRequest) => {
   const response = NextResponse.next();
 
-  let token = request.nextUrl.pathname.includes("api")
+  const token = request.nextUrl.pathname.includes("api")
     ? request.headers.get("authorization")
     : request.cookies.get("token")?.value ?? null;
 
