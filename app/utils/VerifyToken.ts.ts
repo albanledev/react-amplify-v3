@@ -1,4 +1,3 @@
-import { JWTPayload, jwtVerify } from "jose";
 import supabase from "../supabase";
 
 export const verifyJwtToken = async (

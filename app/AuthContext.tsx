@@ -11,10 +11,15 @@ import {
 } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import loginFn from "./utils/login";
+import resgisterFn from "./utils/register";
 
 type AuthContextType = {
   isAuthenticated: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
+  login: (
+    email: string,
+    password: string,
+    isLogin?: boolean
+  ) => Promise<boolean>;
   logout: () => void;
 };
 
@@ -29,12 +34,18 @@ export const AuthProvider = (props: IProps): JSX.Element => {
   const router = useRouter();
   const pathname = usePathname();
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (
+    email: string,
+    password: string,
+    isLogin = true
+  ): Promise<boolean> => {
+    const cred = { email, password };
     try {
-      const response = await loginFn({ email, password });
+      const response = isLogin ? await loginFn(cred) : await resgisterFn(cred);
+
       if (response.session?.access_token) {
         setIsAuthenticated(true);
-        Cookies.set("token", response.session?.access_token);
+        Cookies.set("token", `Bearer ${response.session?.access_token}`);
         return true;
       }
     } catch (error) {
@@ -54,7 +65,8 @@ export const AuthProvider = (props: IProps): JSX.Element => {
     const token = Cookies.get("token");
     setIsAuthenticated(Boolean(token));
 
-    if (token && pathname.includes("login")) router.push("/admin/dashboard");
+    if (token && (pathname.includes("login") || pathname.includes("register")))
+      router.push("/admin/dashboard");
   }, [router]);
 
   return (

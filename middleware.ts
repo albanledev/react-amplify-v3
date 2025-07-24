@@ -8,26 +8,26 @@ const pathnamesNoToken = [
   "/api/auth/register",
   "/api/products",
   "/api/metrics",
-
+  "/signIn",
+  "/signUp",
 ];
 
 export const middleware = async (request: NextRequest) => {
   const response = NextResponse.next();
 
   const token = request.nextUrl.pathname.includes("api")
-    ? request.headers.get("authorization")
+    ? request.headers.get("Authorization")
     : request.cookies.get("token")?.value ?? null;
 
-  if (
-    request.nextUrl.pathname.includes("admin") &&
-    (await isUserAdmin(token))
-  ) {
-    return NextResponse.json(
-      {
-        message: `You're not allowed, insert your token in Authorization headers`,
-      },
-      { status: 403 }
-    );
+  if (request.nextUrl.pathname.includes("admin")) {
+    return (await isUserAdmin(token))
+      ? NextResponse.json(
+          {
+            message: `You're not allowed, insert your token in Authorization headers ADMIN`,
+          },
+          { status: 403 }
+        )
+      : response;
   }
 
   if (pathnamesNoToken.includes(request.nextUrl.pathname)) return response;
@@ -47,5 +47,5 @@ export const middleware = async (request: NextRequest) => {
 };
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/:path*"],
+  matcher: ["/admin/:path*", "/api/:path*", "/"],
 };
