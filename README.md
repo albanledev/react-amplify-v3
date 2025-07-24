@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📊 Next.js Analytics Dashboard
 
-## Getting Started
+Un projet Next.js moderne déployé sur Vercel, utilisant Supabase (PostgreSQL) comme base de données cloud, et Grafana Cloud + Prometheus pour la collecte et la visualisation des métriques.
 
-First, run the development server:
+🔧 Stack technique
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
+# Next.js — framework React fullstack (frontend + API routes)
+
+Supabase — base de données PostgreSQL + auth
+
+Vercel — hébergement serverless
+
+Grafana Cloud — dashboarding & monitoring
+
+Prometheus — collecte et stockage des métriques personnalisées
+
+# 🚀 Fonctionnalités principales
+
+Authentification et gestion d'utilisateurs via Supabase
+
+Stockage de données produits et commentaires
+
+API d'exposition de métriques Prometheus (/api/metrics)
+
+Monitoring en temps réel sur Grafana Cloud
+
+Intégration CI/CD automatique avec Vercel (déploiement via push main)
+
+# 📸 Aperçu
+
+Page Admin (tableau de bord à venir)
+├— Nombre total d'utilisateurs
+├— Nombre total de produits
+├— Nombre total de commentaires
+└— Nombre de connexions actives dans la dernière heure
+
+# ✅ Prérequis
+
+Assurez-vous d’avoir installé :
+
+Node.js >= 18
+
+pnpm ou [npm/yarn]
+
+Un compte Supabase
+
+Un compte Grafana Cloud
+
+# 📦 Installation
+
+pnpm install
+ou
+npm install
+
+🧪 Lancer en local
+
 pnpm dev
-# or
-bun dev
-```
+ou
+npm run dev
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 📊 Prometheus Metrics
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+L'endpoint /api/metrics expose les métriques suivantes :
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- app_users_total Total number of users
+- app_products_total Total number of products
+- app_comments_total Total number of comments
+- app_active_users_last_hour Number of users who signed in the past hour
 
-## Learn More
+### ⚠️ Protégé via Basic Auth : configure les identifiants dans Grafana Cloud (Metrics Endpoint).
 
-To learn more about Next.js, take a look at the following resources:
+# ☁️ Déploiement
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Déployé automatiquement via Vercel.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# CI/CD
 
-## Deploy on Vercel
+Push sur main => déclenche un déploiement Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Les variables d’environnement sont gérées via le dashboard Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# 📊 Monitoring avec Grafana Cloud
+
+Crée un Metrics Endpoint dans Grafana Cloud
+
+Renseigne l’URL de ton endpoint /api/metrics
+
+Ajoute les identifiants METRICS_USER / METRICS_PASS
+
+Explore les métriques dans l’onglet Explore
+
+# 📂 Structure simplifiée
+
+/app
+  /api
+    /metrics.ts         # Expose les métriques Prometheus
+  /admin                # Dashboard (protégé)
+  /products             # Produits accessibles sans auth
+/utils                 # Fonctions d'auth et helpers
+.env.local             # Variables d'environnement locales
+
+# 🛡️ Sécurité
+
+Les routes /api/metrics et /admin sont protégées via un middleware Next.js.
+
+Seuls les tokens JWT valides ou identifiants Basic Auth permettent l'accès aux endpoints sensibles.
