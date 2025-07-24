@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { useEffect, useState } from "react";
 
 interface PersonalInfo {
   name: string;
@@ -23,6 +24,14 @@ interface Comment {
   content: string;
   product: string;
   date: string;
+}
+
+interface UserApiData {
+  id: string;
+  email: string;
+  name?: string;
+  role?: string;
+  // ajoute d'autres champs si besoin
 }
 
 export default function Dashboard() {
@@ -69,6 +78,31 @@ export default function Dashboard() {
       date: "2024-03-20"
     }
   ]);
+
+  const [userApiData, setUserApiData] = useState<UserApiData | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = Cookies.get("token");
+      if (!token) return;
+      const res = await fetch("/api/auth/me", {
+        headers: {
+          authorization: token,
+        },
+      });
+      const data = await res.json();
+      if (res.ok && data.data) {
+        setUserApiData(data.data[0]);
+        setPersonalInfo((prev) => ({
+          ...prev,
+          name: data.data[0]?.name || prev.name,
+          email: data.data[0]?.email || prev.email,
+          role: data.data[0]?.role || prev.role,
+        }));
+      }
+    };
+    fetchUser();
+  }, []);
 
   const toggleEditPersonal = () => {
     setEditingPersonal(!editingPersonal);
