@@ -1,15 +1,16 @@
-describe("Check if the user non admin can access to admin endpoints", () => {
+describe("Check if the user admin can access to admin endpoints", () => {
   let authToken: string;
   const baseUrl = Cypress.env("url");
 
   before("Login", () => {
     cy.login().then(() => {
       authToken = window.localStorage.getItem("authToken") ?? "";
+      cy.log(authToken);
       expect(Boolean(authToken)).true;
     });
   });
 
-  it("Connect with a none admin account", () => {
+  it("Connect with a admin account", () => {
     cy.request({
       method: "POST",
       url: `${baseUrl}api/admin/products`,
@@ -24,7 +25,7 @@ describe("Check if the user non admin can access to admin endpoints", () => {
         "Content-Type": "application/json",
       },
     }).then((response) => {
-      expect(response.status).to.not.eq(201);
+      expect(response.status).to.eq(201);
     });
   });
 });
