@@ -20,7 +20,8 @@ export async function GET(req: NextRequest) {
   const { data, error } = await supabase
     .from("users")
     .select(query)
-    .eq("id", userId);
+    .eq("id", userId)
+    .maybeSingle();
 
   if (error) {
     return NextResponse.json({ message: "Error", error }, { status: 404 });

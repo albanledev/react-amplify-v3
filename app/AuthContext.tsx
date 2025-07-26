@@ -12,6 +12,9 @@ import {
 import { usePathname, useRouter } from "next/navigation";
 import loginFn from "./utils/login";
 import resgisterFn from "./utils/register";
+import { UserType } from "./types";
+import getUserInfos from "./utils/getUserInfos";
+import { error } from "console";
 
 type AuthContextType = {
   isAuthenticated: boolean;
@@ -65,8 +68,8 @@ export const AuthProvider = (props: IProps): JSX.Element => {
     const token = Cookies.get("token");
     setIsAuthenticated(Boolean(token));
 
-    if (token && (pathname.includes("login") || pathname.includes("register")))
-      router.push("/admin/dashboard");
+    if (token && (pathname.includes("signIn") || pathname.includes("signUp")))
+      router.push("/");
   }, [router]);
 
   return (

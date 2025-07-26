@@ -12,15 +12,12 @@ export async function GET(
 
   const { data, error } = await supabase
     .from("products")
-    .select("*")
+    .select("*, comments(*), users(*)")
     .eq("id", id)
     .maybeSingle();
 
   if (error) {
-    return NextResponse.json(
-      { message: "Error", error },
-      { status: Number(error.code) }
-    );
+    return NextResponse.json({ message: "Error", error }, { status: 500 });
   }
 
   return NextResponse.json({ data }, { status: 200 });

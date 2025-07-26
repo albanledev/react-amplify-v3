@@ -1,5 +1,9 @@
-const isUserAdmin = async (token: string | null): Promise<boolean> => {
-  if (!token) return false;
+import { UserType } from "../types";
+
+const getUserInfos = async (
+  token: string | undefined
+): Promise<UserType | null> => {
+  if (!token) return null;
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000/";
 
@@ -12,14 +16,14 @@ const isUserAdmin = async (token: string | null): Promise<boolean> => {
       },
       credentials: "include",
     });
-    if (!response.ok) return false;
+    if (!response.ok) return null;
 
     const res = await response.json();
-    return res.data.role === "OWNER";
+    return res.data;
   } catch (e) {
     console.warn(e);
-    return false;
+    return null;
   }
 };
 
-export default isUserAdmin;
+export default getUserInfos;

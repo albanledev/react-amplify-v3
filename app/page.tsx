@@ -3,12 +3,19 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Product, Products } from "./types";
+import { useAuth } from "./AuthContext";
 
 const Home = () => {
-  const [stats, setStats] = useState<{ products: Products; error: boolean }>({
+  const [stats, setStats] = useState<{
+    products: Products;
+    error: boolean;
+    loading: boolean;
+  }>({
     products: [],
     error: false,
+    loading: true,
   });
+  const { isAuthenticated, logout } = useAuth();
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -20,17 +27,23 @@ const Home = () => {
         setStats({
           products: data.data,
           error: false,
+          loading: false,
         });
       } catch (error) {
         setStats((prev) => ({
           ...prev,
           error: true,
+          loading: false,
         }));
       }
     };
 
     fetchStats();
   }, []);
+
+  if (stats.loading) {
+    return <h1>Loading ..</h1>;
+  }
 
   if (stats.error) {
     return <div>Erreur de chargement des produits</div>;
@@ -43,7 +56,22 @@ const Home = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8">Nos Produits</h1>
+      {!isAuthenticated ? (
+        <Link
+          href={"/signIn"}
+          className="bg-white text-black rounded-lg px-4 py-2"
+        >
+          Go SignIn
+        </Link>
+      ) : (
+        <button
+          className="bg-white text-black rounded-lg px-4 py-2 cursor-pointer"
+          onClick={() => logout()}
+        >
+          Logout
+        </button>
+      )}
+      <h1 className="text-3xl font-bold mb-8 mt-4">Nos Produits</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {productsWithUrls.map((product) => (
