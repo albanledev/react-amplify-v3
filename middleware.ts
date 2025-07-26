@@ -10,27 +10,35 @@ const pathnamesNoToken = [
   "/api/metrics",
   "/signIn",
   "/signUp",
+  "/products",
+  "/",
 ];
+
+const isProductDetailPath = (pathname: string) => {
+  return /^\/api\/products\/[^/]+$/.test(pathname);
+};
 
 export const middleware = async (request: NextRequest) => {
   const response = NextResponse.next();
+  const pathname = request.nextUrl.pathname;
 
-  const token = request.nextUrl.pathname.includes("api")
+  const token = pathname.includes("api")
     ? request.headers.get("Authorization")
     : request.cookies.get("token")?.value ?? null;
 
-  if (request.nextUrl.pathname.includes("admin")) {
+  if (pathname.includes("admin")) {
     return (await isUserAdmin(token))
-      ? NextResponse.json(
+      ? response
+      : NextResponse.json(
           {
             message: `You're not allowed, insert your token in Authorization headers ADMIN`,
           },
           { status: 403 }
-        )
-      : response;
+        );
   }
 
-  if (pathnamesNoToken.includes(request.nextUrl.pathname)) return response;
+  if (pathnamesNoToken.includes(pathname) || isProductDetailPath(pathname))
+    return response;
 
   const verifyToken = await verifyJwtToken(token);
 

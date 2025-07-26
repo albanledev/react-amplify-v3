@@ -4,15 +4,15 @@ import { NextResponse } from "next/server";
 export async function GET() {
   const { data: users, error: usersError } = await supabase
     .from("users")
-    .select("email");
+    .select("*");
 
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("title");
+    .select("*");
 
   const { data: comments, error: commentsError } = await supabase
     .from("comments")
-    .select("content");
+    .select("*");
 
   if (usersError ?? productsError ?? commentsError) {
     return NextResponse.json({ message: "Error" }, { status: 500 });
@@ -20,11 +20,11 @@ export async function GET() {
 
   return NextResponse.json(
     {
-      message: "Users and Products",
+      message: "All infos",
       data: {
-        numberUsers: users?.length,
-        numberProducts: products?.length,
-        numberComments: comments?.length,
+        users: users,
+        products: products,
+        comments: comments,
       },
     },
     { status: 200 }
