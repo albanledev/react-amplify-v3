@@ -9,6 +9,7 @@ export default defineConfig({
     testPassword: process.env.CYPRESS_TEST_PASSWORD,
     url: process.env.NEXT_PUBLIC_URL,
   },
+
   e2e: {
     setupNodeEvents(on, config) {
       config.env = {
@@ -16,6 +17,13 @@ export default defineConfig({
         ...process.env,
       };
       return config;
+    },
+  },
+
+  component: {
+    devServer: {
+      framework: "next",
+      bundler: "webpack",
     },
   },
 });
