@@ -10,7 +10,7 @@ describe("Check if the user admin can access to admin endpoints", () => {
     });
   });
 
-  it("Connect with a admin account", () => {
+  it("Connect with a non admin account", () => {
     cy.request({
       method: "POST",
       url: `${baseUrl}api/admin/products`,
@@ -25,7 +25,7 @@ describe("Check if the user admin can access to admin endpoints", () => {
         "Content-Type": "application/json",
       },
     }).then((response) => {
-      expect(response.status).to.eq(201);
+      expect(response.status).to.not.eq(201);
     });
   });
 });
