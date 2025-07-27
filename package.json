@@ -9,7 +9,9 @@
     "start": "next start",
     "lint": "next lint",
     "cy:open": "cypress open",
-    "cy:run": "cypress run"
+    "cy:run:component": "cypress run --component",
+    "cy:run:api": "cypress run --e2e",
+    "cy:run": "npm run cy:run:api && npm run cy:run:component"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.0",
